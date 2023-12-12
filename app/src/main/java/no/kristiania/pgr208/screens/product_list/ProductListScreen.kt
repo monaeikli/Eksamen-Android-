@@ -23,6 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.ShoppingCart
 import no.kristiania.pgr208.screens.common.ProductItem
 
 
@@ -35,10 +38,14 @@ fun ProductListScreen(
 ) {
     val loading = viewModel.loading.collectAsState()
     val products = viewModel.products.collectAsState()
+    val scrollState = rememberScrollState()
 
+    //Shows a loading circle while its getting the data
     if (loading.value) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -48,9 +55,11 @@ fun ProductListScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        modifier = Modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+
+        ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -83,25 +92,35 @@ fun ProductListScreen(
                         tint = Color.Red
                     )
                 }
-            }
-        }
 
-        Divider()
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            items(products.value) { product ->
-                ProductItem(
-                    product = product,
-                    onClick = {
-                        onProductClick(product.id)
-                    }
-                )
+                IconButton(
+                    onClick = { navigateToShoppingCart() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = "Shopping cart",
+                        tint = Color.DarkGray
+                    )
+                }
             }
 
+            Divider()
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                items(products.value) { product ->
+                    ProductItem(
+                        product = product,
+                        onClick = {
+                            onProductClick(product.id)
+                        }
+                    )
+                }
+
+            }
         }
     }
 }

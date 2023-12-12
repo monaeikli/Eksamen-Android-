@@ -1,4 +1,4 @@
-package no.kristiania.pgr208.screens.favorite_list
+package no.kristiania.pgr208.screens.shoppingCart_list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,13 +25,12 @@ import androidx.compose.ui.unit.dp
 import no.kristiania.pgr208.screens.common.ProductItem
 
 @Composable
-fun FavoriteListScreen(
-    viewModel: FavoriteListViewModel,
+fun ShoppingCartScreen(
+    viewModel: ShoppingCartViewModel,
     onBackButtonClick: () -> Unit = {},
     onProductClick: (productId: Int) -> Unit = {},
 ) {
-    val products = viewModel.favoriteProduct.collectAsState()
-
+    val products = viewModel.buyingProduct.collectAsState()
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -54,7 +53,7 @@ fun FavoriteListScreen(
 
             Text(
                 modifier = Modifier.padding(30.dp),
-                text = "Favorites",
+                text = "ShoppingCart",
                 style = MaterialTheme.typography.titleLarge
             )
         }
@@ -71,5 +70,5 @@ fun FavoriteListScreen(
                 )
             }
         }
-    }
+}
 }

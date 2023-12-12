@@ -8,12 +8,12 @@ import retrofit2.http.Path
 //  By utilizing Retrofit, we can connect to a Third-party API (thespacedevs.com)
 //  to retrieve real-world data about astronauts!
 interface ProductService {
-
-    @GET("products")
-    suspend fun getAllProducts(): Response<List<Product>>
-
     @GET("products/{id}")
     suspend fun getProduct(
         @Path("id") id: Int
     ): Response<Product>
+    @GET("products")
+    suspend fun getAllProducts(): Response<ProductListResponse>
+
+
 }

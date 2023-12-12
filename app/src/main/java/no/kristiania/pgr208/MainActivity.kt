@@ -17,11 +17,14 @@ import no.kristiania.pgr208.screens.product_details.ProductDetailsScreen
 import no.kristiania.pgr208.screens.product_details.ProductDetailsViewModel
 import no.kristiania.pgr208.screens.product_list.ProductListScreen
 import no.kristiania.pgr208.screens.product_list.ProductListViewModel
+import no.kristiania.pgr208.screens.shoppingCart_list.ShoppingCartScreen
+import no.kristiania.pgr208.screens.shoppingCart_list.ShoppingCartViewModel
 import no.kristiania.pgr208.theme.PGR208Theme
 
 class MainActivity : ComponentActivity() {
     private val _productListViewModel: ProductListViewModel by viewModels()
     private val _favoriteListViewModel: FavoriteListViewModel by viewModels()
+    private val _shoppingCartViewModel: ShoppingCartViewModel by viewModels()
     private val _productDetailsViewModel: ProductDetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +42,8 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     // We add new destinations by using 'composable()', and give the destination a name ('route')
-                    composable(route = "productListScreen") {
+                    composable(
+                        route = "productListScreen") {
                         ProductListScreen(
                             viewModel = _productListViewModel,
                             onProductClick = { productId ->
@@ -47,9 +51,13 @@ class MainActivity : ComponentActivity() {
                             },
                             navigateToFavoriteList = {
                                 navController.navigate("favoriteListScreen")
+                            },
+                            navigateToShoppingCart = {
+                                navController.navigate("shoppingCartScreen")
                             }
                         )
                     }
+
 
                     composable(
                         route = "productDetailsScreen/{productId}",
@@ -72,7 +80,8 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable(route = "favoriteListScreen") {
+                    composable(
+                        route = "favoriteListScreen") {
                         // LaunchedEffect will run it's code block first time we navigate to favoriteListScreen
                         LaunchedEffect(Unit) {
                             _favoriteListViewModel.loadFavorites()
@@ -80,6 +89,21 @@ class MainActivity : ComponentActivity() {
 
                         FavoriteListScreen(
                             viewModel = _favoriteListViewModel,
+                            onBackButtonClick = { navController.popBackStack() },
+                            onProductClick = { productId ->
+                                navController.navigate("productDetailsScreen/$productId")
+                            }
+                        )
+                    }
+                    composable(
+                        route = "shoppingCartScreen") {
+                        // LaunchedEffect will run it's code block first time we navigate to favoriteListScreen
+                        LaunchedEffect(Unit) {
+                            _shoppingCartViewModel.loadCart()
+                        }
+
+                        ShoppingCartScreen(
+                            viewModel = _shoppingCartViewModel,
                             onBackButtonClick = { navController.popBackStack() },
                             onProductClick = { productId ->
                                 navController.navigate("productDetailsScreen/$productId")

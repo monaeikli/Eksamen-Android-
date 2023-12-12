@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,20 +62,10 @@ fun ProductDetailsScreen(
         return
     }
 
-    AsyncImage(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Gray),
-        model = product.productImage,
-        contentScale = ContentScale.Crop,
-        alignment = Alignment.Center,
-        contentDescription = "Image of ${product.name}"
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = TransparentBlack),
+            .background(color = Color.White),
     ) {
         Row(
             modifier = Modifier
@@ -92,7 +83,7 @@ fun ProductDetailsScreen(
                 )
             }
             Text(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(30.dp),
                 text = "Product Details",
                 style = MaterialTheme.typography.titleLarge
             )
@@ -116,15 +107,25 @@ fun ProductDetailsScreen(
                 .verticalScroll(state = rememberScrollState()),
         ) {
             Spacer(modifier = Modifier.height(32.dp))
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.Gray),
+                model = product.productImage,
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center,
+                contentDescription = "Image of ${product.name}"
+            )
+            Spacer(modifier = Modifier.height(39.dp))
             Text(
                 text = product.name,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White,
+                color = Color.Black,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(1.dp))
             Text(
                 text = product.category,
                 style = MaterialTheme.typography.headlineSmall,
@@ -139,18 +140,20 @@ fun ProductDetailsScreen(
                 text = product.description,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White,
+                color = Color.Black,
                 overflow = TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = product.price.toString(),
+                text = "Price: " + product.price.toString(),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White,
+                color = Color.Black,
                 overflow = TextOverflow.Ellipsis
             )
+                Text(text = "Add to cart")
+
 
         }
     }

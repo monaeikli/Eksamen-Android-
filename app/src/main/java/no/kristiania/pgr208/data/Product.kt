@@ -7,7 +7,6 @@ import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
 
 @Entity
-@TypeConverters(ProductTypeConverter::class)
 data class Product(
     @PrimaryKey
     val id: Int,
@@ -16,8 +15,10 @@ data class Product(
     val price: Double,
     val description: String,
     val category: String,
-    @SerializedName("images")
+    @SerializedName("thumbnail")
     val productImage: String,
 )
 
-
+data class ProductListResponse(
+    val products: List<Product>
+)

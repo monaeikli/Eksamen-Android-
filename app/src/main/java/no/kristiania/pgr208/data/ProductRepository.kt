@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.room.Room
 import no.kristiania.pgr208.data.room.AppDatabase
 import no.kristiania.pgr208.data.room.Favorite
+import no.kristiania.pgr208.data.room.ShoppingCart
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -41,6 +42,7 @@ object ProductRepository {
     private lateinit var _appDatabase: AppDatabase
     private val _productDao by lazy { _appDatabase.productDao() }
     private val _favoriteDao by lazy { _appDatabase.favoriteDao() }
+    private val _shoppingCartDao by lazy { _appDatabase.shoppingCartDao() }
 
     fun initializeDatabase(context: Context) {
         _appDatabase = Room.databaseBuilder(
@@ -53,13 +55,14 @@ object ProductRepository {
     suspend fun getProducts(): List<Product> {
         try {
             val response = _productService.getAllProducts()
-
+            Log.d("ProductRepository", "API Response Code: ${response.code()}")
+            Log.d("ProductRepository", "API Response Body: ${response.body()}")
             // We first need to check if the response was successful. If we don't handle it, our app can
             // crash if we for example don't have an internet connection..
             if(response.isSuccessful) {
                 // The "response body" might be NULL (the API response was successful, but didn't
                 // return any data (NULL) -- If we don't handle this, we might also run into a crash!!
-                val products = response.body() ?: emptyList()
+                val products = response.body()?.products ?: emptyList()
 
                 // Here we insert the resulting products from the API into our database!!
                 _productDao.insertProducts(products)
@@ -95,6 +98,19 @@ object ProductRepository {
 
     suspend fun removeFavorite(favorite: Favorite){
         _favoriteDao.removeFavorite(favorite)
+    }
+    // --- ShoppingCart Functions ---
+
+    suspend fun getShoppingCart(): List<ShoppingCart> {
+        return _shoppingCartDao.getShoppingCart()
+    }
+
+    suspend fun addToShoppingCart(shoppingCart: ShoppingCart) {
+        _shoppingCartDao.insertProductToCart(shoppingCart)
+    }
+
+    suspend fun removeFromCart(shoppingCart: ShoppingCart){
+        _shoppingCartDao.removeFromCart(shoppingCart)
     }
 }
 
