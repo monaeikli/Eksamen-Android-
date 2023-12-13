@@ -55,8 +55,6 @@ object ProductRepository {
     suspend fun getProducts(): List<Product> {
         try {
             val response = _productService.getAllProducts()
-            Log.d("ProductRepository", "API Response Code: ${response.code()}")
-            Log.d("ProductRepository", "API Response Body: ${response.body()}")
             // We first need to check if the response was successful. If we don't handle it, our app can
             // crash if we for example don't have an internet connection..
             if(response.isSuccessful) {

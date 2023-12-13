@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -43,7 +44,7 @@ fun ProductDetailsScreen(
     val productState = viewModel.selectedProduct.collectAsState()
     val isFavorite = viewModel.isFavorite.collectAsState()
 
-    if(loading.value) {
+    if (loading.value) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -57,7 +58,7 @@ fun ProductDetailsScreen(
     // We 'abstract' the state value to a local variable here, so that we can reuse it
     // later in this function without having to check if it is NULL or not EVERYWHERE
     val product = productState.value
-    if(product == null) {
+    if (product == null) {
         Text(text = "Failed to get product details. Selected product-object is NULL!")
         return
     }
@@ -98,6 +99,7 @@ fun ProductDetailsScreen(
                 )
             }
         }
+
 
         Column(
             modifier = Modifier
@@ -152,7 +154,10 @@ fun ProductDetailsScreen(
                 color = Color.Black,
                 overflow = TextOverflow.Ellipsis
             )
+            Button(onClick = { addToShoppingCart() }) {
                 Text(text = "Add to cart")
+            }
+
 
 
         }

@@ -6,7 +6,7 @@ import no.kristiania.pgr208.data.Product
 
 @Database(
     entities = [Product::class, Favorite::class, ShoppingCart::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {

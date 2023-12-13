@@ -25,7 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Star
 import no.kristiania.pgr208.screens.common.ProductItem
 
 
@@ -34,13 +36,14 @@ import no.kristiania.pgr208.screens.common.ProductItem
 fun ProductListScreen(
     viewModel: ProductListViewModel,
     onProductClick: (productId: Int) -> Unit = {},
-    navigateToFavoriteList: () -> Unit = {}
+    navigateToFavoriteList: () -> Unit = {},
+    navigateToShoppingCart: () -> Unit = {}
 ) {
     val loading = viewModel.loading.collectAsState()
     val products = viewModel.products.collectAsState()
     val scrollState = rememberScrollState()
 
-    //Shows a loading circle while its getting the data
+    // Shows a loading circle while it's getting the data
     if (loading.value) {
         Column(
             modifier = Modifier
@@ -56,70 +59,70 @@ fun ProductListScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        Text(
+            modifier = Modifier.padding(30.dp),
+            text = "Products",
+            style = MaterialTheme.typography.titleLarge
+        )
 
-        ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically,
+
         ) {
-            Text(
-                modifier = Modifier.padding(30.dp),
-                text = "Products",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Row(
-                modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
+            IconButton(
+                onClick = { viewModel.refreshProducts() }
             ) {
-                IconButton(
-                    onClick = { viewModel.refreshProducts() }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = "Refresh products"
-                    )
-                }
-                IconButton(
-                    onClick = { navigateToFavoriteList() }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = "Favorite",
-                        tint = Color.Red
-                    )
-                }
-
-                IconButton(
-                    onClick = { navigateToShoppingCart() }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ShoppingCart,
-                        contentDescription = "Shopping cart",
-                        tint = Color.DarkGray
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Refresh products"
+                )
             }
-
-            Divider()
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+            IconButton(
+                onClick = { navigateToFavoriteList() }
             ) {
-                items(products.value) { product ->
-                    ProductItem(
-                        product = product,
-                        onClick = {
-                            onProductClick(product.id)
-                        }
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = "Favorite",
+                    tint = Color.Red
+                )
+            }
+            IconButton(
+                onClick = { navigateToShoppingCart() }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ShoppingCart,
+                    contentDescription = "Shopping cart",
+                    tint = Color.DarkGray
+                )
+            }
+            Icon(
+                imageVector = Icons.Default.List,
+                contentDescription = "Orderhistory",
+                tint = Color.DarkGray
+            )
+        }
 
+        Divider()
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            items(products.value) { product ->
+                ProductItem(
+                    product = product,
+                    onClick = {
+                        onProductClick(product.id)
+                    }
+                )
             }
         }
     }
