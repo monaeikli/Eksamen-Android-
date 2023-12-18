@@ -13,6 +13,8 @@ import androidx.navigation.navArgument
 import no.kristiania.pgr208.data.ProductRepository
 import no.kristiania.pgr208.screens.favorite_list.FavoriteListScreen
 import no.kristiania.pgr208.screens.favorite_list.FavoriteListViewModel
+import no.kristiania.pgr208.screens.order_list.OrderHistoryScreen
+import no.kristiania.pgr208.screens.order_list.OrderHistoryViewModel
 import no.kristiania.pgr208.screens.product_details.ProductDetailsScreen
 import no.kristiania.pgr208.screens.product_details.ProductDetailsViewModel
 import no.kristiania.pgr208.screens.product_list.ProductListScreen
@@ -22,20 +24,25 @@ import no.kristiania.pgr208.screens.shoppingCart_list.ShoppingCartViewModel
 import no.kristiania.pgr208.theme.PGR208Theme
 
 class MainActivity : ComponentActivity() {
+    // ViewModels for different screens
     private val _productListViewModel: ProductListViewModel by viewModels()
     private val _favoriteListViewModel: FavoriteListViewModel by viewModels()
     private val _shoppingCartViewModel: ShoppingCartViewModel by viewModels()
     private val _productDetailsViewModel: ProductDetailsViewModel by viewModels()
+    private val _orderHistoryViewModel: OrderHistoryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Initialize the database when the activity is created
         ProductRepository.initializeDatabase(applicationContext)
 
         setContent {
             PGR208Theme {
+                // Apply the theme and create a NavController for navigation
                 val navController = rememberNavController()
 
+                // Set up navigation using NavHost with Jetpack Compose
                 NavHost(
                     navController = navController,
                     startDestination = "productListScreen"
@@ -44,6 +51,7 @@ class MainActivity : ComponentActivity() {
                     // We add new destinations by using 'composable()', and give the destination a name ('route')
                     composable(
                         route = "productListScreen") {
+                        // Destination for the product list screen
                         ProductListScreen(
                             viewModel = _productListViewModel,
                             onProductClick = { productId ->
@@ -54,7 +62,10 @@ class MainActivity : ComponentActivity() {
                             },
                             navigateToShoppingCart = {
                                 navController.navigate("shoppingCartScreen")
-                            }
+                            },
+                            navigateToOrderHistory = {
+                                navController.navigate("orderHistoryScreen")
+                            },
                         )
                     }
 
@@ -107,11 +118,23 @@ class MainActivity : ComponentActivity() {
                             onBackButtonClick = { navController.popBackStack() },
                             onProductClick = { productId ->
                                 navController.navigate("productDetailsScreen/$productId")
-                            }
+                            },
+                            onOrderClick = {/*TODO*/}
                         )
                     }
-                }
+                    composable(
+                        route = "orderHistoryScreen") {
+                        // LaunchedEffect will run it's code block first time we navigate to favoriteListScreen
+                        LaunchedEffect(Unit) {
+                            _orderHistoryViewModel.loadOrderHistory()
+                        }
+
+                        OrderHistoryScreen(
+                            viewModel = _orderHistoryViewModel,
+                            onBackButtonClick = { navController.popBackStack() },
+                        )
+                    }
             }
         }
     }
-}
+}}

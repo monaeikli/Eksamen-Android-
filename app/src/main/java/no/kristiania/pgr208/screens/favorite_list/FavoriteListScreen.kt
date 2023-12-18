@@ -30,12 +30,14 @@ fun FavoriteListScreen(
     onBackButtonClick: () -> Unit = {},
     onProductClick: (productId: Int) -> Unit = {},
 ) {
+    // Collect favorite products from the ViewModel
     val products = viewModel.favoriteProduct.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Row for the top app bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -43,6 +45,7 @@ fun FavoriteListScreen(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Back button
             IconButton(
                 onClick = { onBackButtonClick() }
             ) {
@@ -51,7 +54,7 @@ fun FavoriteListScreen(
                     contentDescription = "Navigate Back"
                 )
             }
-
+            // Title of the screen
             Text(
                 modifier = Modifier.padding(30.dp),
                 text = "Favorites",
@@ -60,9 +63,10 @@ fun FavoriteListScreen(
         }
 
         Divider()
-
+        // LazyColumn for displaying the list of favorite products
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(products.value) { product ->
+                // Each item in the LazyColumn is a ProductItem
                 ProductItem(
                     product = product,
                     onClick = {
